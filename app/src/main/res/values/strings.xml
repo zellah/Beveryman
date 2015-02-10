@@ -6,12 +6,12 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
+    <string name="pour_button_text">Pour me one, Beveryman!</string>
 
     <string name="drink_title">Loading drink title</string>
     <string name="drink_ingredients">Loading ingredient list</string>
     <string name="drink_description">Loading drink description</string>
-
-    <string name="go_button_text">Pour me one, Beveryman!</string>
+    <string name="ingredients">Ingredients:</string>
 
     <string name="title1">Whiskey sour</string>
     <string name="description1">A whiskey sour is a drink. Yum.</string>
