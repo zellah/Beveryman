@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,7 +56,6 @@ public class MainActivity extends ActionBarActivity
         fragmentManager.beginTransaction()
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                 .commit();
-        //TODO: update fragment strings here?
     }
 
     public void onSectionAttached(int number) {
@@ -131,13 +131,11 @@ public class MainActivity extends ActionBarActivity
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-            setTextById(rootView);
-
+            updateDrinkView(rootView);
             return rootView;
         }
 
-        private void setTextById(View rootView) {
+        private void updateDrinkView(View rootView) {
             TextView mDrinkTitle = (TextView) rootView.findViewById(R.id.drink_title);
             TextView mDrinkDescr = (TextView) rootView.findViewById(R.id.drink_description);
             TextView mDrinkIngre = (TextView) rootView.findViewById(R.id.drink_ingredients);
@@ -159,6 +157,13 @@ public class MainActivity extends ActionBarActivity
                     mDrinkIngre.setText(getString(R.string.ingredients3));
                     break;
             }
+
+            Button pourButton = (Button) rootView.findViewById(R.id.pour_button);
+            pourButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    // call drink library TBD which talks to Beveryman over bluetooth
+                }
+            });
         }
 
         @Override
