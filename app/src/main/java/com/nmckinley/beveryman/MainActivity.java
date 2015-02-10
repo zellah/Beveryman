@@ -161,7 +161,7 @@ public class MainActivity extends ActionBarActivity
             Button pourButton = (Button) rootView.findViewById(R.id.pour_button);
             pourButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    // call drink library TBD which talks to Beveryman over bluetooth
+                    DrinkMaker.makeDrink(section);
                 }
             });
         }
