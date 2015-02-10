@@ -2,19 +2,28 @@
 <resources>
 
     <string name="app_name">Beveryman</string>
-    <string name="title_section1">Whiskey sour</string>
-    <string name="title_section2">Rum and coke</string>
-    <string name="title_section3">Long Island iced tea</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
-    <string name="welcome_screen">Please select a drink from the menu</string>
 
     <string name="drink_title">Loading drink title</string>
     <string name="drink_ingredients">Loading ingredient list</string>
     <string name="drink_description">Loading drink description</string>
 
     <string name="go_button_text">Pour me one, Beveryman!</string>
+
+    <string name="title1">Whiskey sour</string>
+    <string name="description1">A whiskey sour is a drink. Yum.</string>
+    <string name="ingredients1">Whiskey, sour mix. Duh.</string>
+
+    <string name="title2">Rum and coke</string>
+    <string name="description2">A rum and coke is a drink. Add a slice of lime and it\'s a cuba
+        libre.</string>
+    <string name="ingredients2">Rum, coke. You idiot.</string>
+
+    <string name="title3">Long Island iced tea</string>
+    <string name="description3">I guess people on Long Island are drunk a lot.</string>
+    <string name="ingredients3">Buncha alcohols in here.</string>
 
 </resources>
