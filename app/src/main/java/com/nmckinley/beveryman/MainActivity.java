@@ -1,30 +1,35 @@
 package com.nmckinley.beveryman;
 
 import android.app.Activity;
-import android.content.res.Configuration;
-import android.support.v7.app.ActionBarDrawerToggle;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.reflect.Method;
+import java.util.Set;
+import java.util.UUID;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -34,6 +39,26 @@ public class MainActivity extends ActionBarActivity
 
     /** Used to store the last screen title. For use in {@link #restoreActionBar()}. */
     private CharSequence mTitle;
+
+    private static final int REQUEST_ENABLE_BT = 1;
+    private BluetoothAdapter bluetoothAdapter;
+    private Set<BluetoothDevice> pairedDevices;
+    private ListView myListView;
+    private ArrayAdapter<String> BTArrayAdapter;
+    private BroadcastReceiver bReceiver;
+
+    private static final String TAG = "bluetooth1";
+    Button btnOn, btnOff;
+    private BluetoothAdapter btAdapter = null;
+    private BluetoothSocket btSocket = null;
+    private OutputStream arduinoStream = null;
+
+    // SPP UUID service
+    private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+
+    // MAC-address of Bluetooth module
+    // TODO
+    private static String address = "00:15:FF:F2:19:5F";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +72,165 @@ public class MainActivity extends ActionBarActivity
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+//        // Check that bluetooth is supported
+//        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//        if (bluetoothAdapter == null) {
+//            Toast.makeText(getApplicationContext(), "Your device does not support Bluetooth",
+//                    Toast.LENGTH_LONG).show();
+//            return;
+//        }
+//        // turn bluetooth on if it is off
+//        if (!bluetoothAdapter.isEnabled()) {
+//            // turn bluetooth on on the device running this app
+//            startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
+//                    REQUEST_ENABLE_BT);
+//        // Check for the Beveryman and connect
+//        } else {
+//            String mydeviceaddress = bluetoothAdapter.getAddress();
+//            String mydevicename = bluetoothAdapter.getName();
+//
+//            Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
+//            if (pairedDevices.size() > 0) {
+//                for (BluetoothDevice device : pairedDevices) {
+//                    BTArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+//                    // Discovery will limit bandwidth, so skip it if we already have the Beveryman
+//                    //TODO
+//                }
+//            }
+//        }
+//
+//        // receiver to track new BluetoothDevice objects as they are found
+//        bReceiver = new BroadcastReceiver() {
+//            public void onReceive(Context context, Intent intent) {
+//                String action = intent.getAction();
+//                // When discovery finds a device
+//                if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+//                    // Get the BluetoothDevice object from the Intent
+//                    BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+//                    // add the name and the MAC address of the object to the arrayAdapter
+//                    BTArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+//                    BTArrayAdapter.notifyDataSetChanged();
+//                    //TODO
+//                }
+//            }
+//        };
+//
+//        bluetoothAdapter.startDiscovery();
+//        registerReceiver(bReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
+
+        btAdapter = BluetoothAdapter.getDefaultAdapter();
+        ensureBluetoothAvailable();
+    }
+
+    private BluetoothSocket createBluetoothSocket(BluetoothDevice device) throws IOException {
+        if (Build.VERSION.SDK_INT >= 10){
+            try {
+                final Method m = device.getClass().getMethod(
+                        "createInsecureRfcommSocketToServiceRecord", new Class[] { UUID.class });
+                return (BluetoothSocket) m.invoke(device, MY_UUID);
+            } catch (Exception e) {
+                Log.e(TAG, "Could not create Insecure RFComm Connection", e);
+            }
+        }
+        return  device.createRfcommSocketToServiceRecord(MY_UUID);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "...onResume - try connect...");
+        BluetoothDevice device = btAdapter.getRemoteDevice(address);
+        try {
+            btSocket = createBluetoothSocket(device);
+        } catch (IOException e1) {
+            exitWithErrorMessage("Fatal Error", "In onResume() and socket create failed: " + e1.getMessage() + ".");
+        }
+
+        // Discovery is resource intensive, ensure it isn't happening.
+        btAdapter.cancelDiscovery();
+
+        // Establish the connection.  This will block until it connects.
+        Log.d(TAG, "...Connecting...");
+        try {
+            btSocket.connect();
+            Log.d(TAG, "...Connection ok...");
+        } catch (IOException e) {
+            try {
+                btSocket.close();
+            } catch (IOException e2) {
+                exitWithErrorMessage("Fatal Error", "In onResume() and unable to close socket during connection failure" + e2.getMessage() + ".");
+            }
+        }
+
+        // Create a data stream so we can talk to server.
+        Log.d(TAG, "...Create Socket...");
+        try {
+            arduinoStream = btSocket.getOutputStream();
+        } catch (IOException e) {
+            exitWithErrorMessage("Fatal Error", "In onResume() and output stream creation failed:" + e.getMessage() + ".");
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d(TAG, "...In onPause()...");
+
+        if (arduinoStream != null) {
+            try {
+                arduinoStream.flush();
+            } catch (IOException e) {
+                exitWithErrorMessage("Fatal Error", "In onPause() and failed to flush output stream: " + e.getMessage() + ".");
+            }
+        }
+
+        try {
+            btSocket.close();
+        } catch (IOException e2) {
+            exitWithErrorMessage("Fatal Error", "In onPause() and failed to close socket." + e2.getMessage() + ".");
+        }
+    }
+
+    private void ensureBluetoothAvailable() {
+        // Check for Bluetooth support and then check to make sure it is turned on
+        // Emulator doesn't support Bluetooth and will return null
+        if(btAdapter==null) {
+            exitWithErrorMessage("Fatal Error", "Bluetooth not support");
+        } else {
+            if (btAdapter.isEnabled()) {
+                Log.d(TAG, "...Bluetooth ON...");
+            } else {
+                //Prompt user to turn on Bluetooth
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, 1);
+            }
+        }
+    }
+
+    private void sendDataToBeveryman(String message) {
+        if (arduinoStream == null) {
+            Toast.makeText(getBaseContext(), "Beveryman not connected.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        byte[] msgBuffer = message.getBytes();
+        Log.d(TAG, "...Send data: " + message + "...");
+
+        try {
+            arduinoStream.write(msgBuffer);
+        } catch (IOException e) {
+            String msg = "In onResume() and an exception occurred during write: " + e.getMessage();
+            msg = msg +  ".\n\nCheck that the SPP UUID: " + MY_UUID.toString() + " exists on " +
+                     "server.\n\n";
+            exitWithErrorMessage("Fatal Error", msg);
+        }
+    }
+
+    private void exitWithErrorMessage(String title, String message){
+        Log.e(TAG, title + " : " + message);
+        Toast.makeText(getBaseContext(), title + " - " + message, Toast.LENGTH_LONG).show();
+        finish();
     }
 
     @Override
@@ -106,6 +290,23 @@ public class MainActivity extends ActionBarActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_ENABLE_BT){
+            if(bluetoothAdapter.isEnabled()) {
+                //text.setText("Status: Enabled");
+            } else {
+                //text.setText("Status: Disabled");
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        unregisterReceiver(bReceiver);
+        super.onDestroy();
     }
 
     /** A placeholder fragment containing a simple view. */
