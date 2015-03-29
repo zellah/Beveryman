@@ -57,8 +57,7 @@ public class MainActivity extends ActionBarActivity
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     // MAC-address of Bluetooth module
-    // TODO
-    private static String address = "00:15:FF:F2:19:5F";
+    private static String address = "20:14:12:03:22:49";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,14 +180,16 @@ public class MainActivity extends ActionBarActivity
             try {
                 arduinoStream.flush();
             } catch (IOException e) {
-                exitWithErrorMessage("Fatal Error", "In onPause() and failed to flush output stream: " + e.getMessage() + ".");
+                Log.e(TAG, "onPause() failed to flush output stream: "+ e.getMessage() + ".");
+                return;
             }
         }
 
         try {
             btSocket.close();
         } catch (IOException e2) {
-            exitWithErrorMessage("Fatal Error", "In onPause() and failed to close socket." + e2.getMessage() + ".");
+            exitWithErrorMessage("Fatal Error", "onPause() failed to close socket."
+                    + e2.getMessage() + ".");
         }
     }
 
@@ -305,7 +306,9 @@ public class MainActivity extends ActionBarActivity
 
     @Override
     protected void onDestroy() {
-        unregisterReceiver(bReceiver);
+        if (bReceiver != null) {
+            unregisterReceiver(bReceiver);
+        }
         super.onDestroy();
     }
 
