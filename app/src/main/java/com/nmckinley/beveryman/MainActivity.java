@@ -41,17 +41,11 @@ public class MainActivity extends ActionBarActivity
     private CharSequence mTitle;
 
     private static final int REQUEST_ENABLE_BT = 1;
-    private BluetoothAdapter bluetoothAdapter;
-    private Set<BluetoothDevice> pairedDevices;
-    private ListView myListView;
-    private ArrayAdapter<String> BTArrayAdapter;
-    private BroadcastReceiver bReceiver;
 
     private static final String TAG = "bluetooth1";
-    Button btnOn, btnOff;
     private BluetoothAdapter btAdapter = null;
     private BluetoothSocket btSocket = null;
-    private OutputStream arduinoStream = null;
+    private static OutputStream arduinoStream = null;
 
     // SPP UUID service
     private static final UUID MY_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -72,54 +66,24 @@ public class MainActivity extends ActionBarActivity
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
 
-//        // Check that bluetooth is supported
-//        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-//        if (bluetoothAdapter == null) {
-//            Toast.makeText(getApplicationContext(), "Your device does not support Bluetooth",
-//                    Toast.LENGTH_LONG).show();
-//            return;
-//        }
-//        // turn bluetooth on if it is off
-//        if (!bluetoothAdapter.isEnabled()) {
-//            // turn bluetooth on on the device running this app
-//            startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE),
-//                    REQUEST_ENABLE_BT);
-//        // Check for the Beveryman and connect
-//        } else {
-//            String mydeviceaddress = bluetoothAdapter.getAddress();
-//            String mydevicename = bluetoothAdapter.getName();
-//
-//            Set<BluetoothDevice> pairedDevices = bluetoothAdapter.getBondedDevices();
-//            if (pairedDevices.size() > 0) {
-//                for (BluetoothDevice device : pairedDevices) {
-//                    BTArrayAdapter.add(device.getName() + "\n" + device.getAddress());
-//                    // Discovery will limit bandwidth, so skip it if we already have the Beveryman
-//                    //TODO
-//                }
-//            }
-//        }
-//
-//        // receiver to track new BluetoothDevice objects as they are found
-//        bReceiver = new BroadcastReceiver() {
-//            public void onReceive(Context context, Intent intent) {
-//                String action = intent.getAction();
-//                // When discovery finds a device
-//                if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-//                    // Get the BluetoothDevice object from the Intent
-//                    BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-//                    // add the name and the MAC address of the object to the arrayAdapter
-//                    BTArrayAdapter.add(device.getName() + "\n" + device.getAddress());
-//                    BTArrayAdapter.notifyDataSetChanged();
-//                    //TODO
-//                }
-//            }
-//        };
-//
-//        bluetoothAdapter.startDiscovery();
-//        registerReceiver(bReceiver, new IntentFilter(BluetoothDevice.ACTION_FOUND));
-
         btAdapter = BluetoothAdapter.getDefaultAdapter();
         ensureBluetoothAvailable();
+    }
+
+    private void ensureBluetoothAvailable() {
+        // Check for Bluetooth support and then check to make sure it is turned on
+        // Emulator doesn't support Bluetooth and will return null
+        if(btAdapter==null) {
+            exitWithErrorMessage(this, "Fatal Error", "Bluetooth not supported");
+        } else {
+            if (btAdapter.isEnabled()) {
+                Log.d(TAG, "...Bluetooth is on...");
+            } else {
+                //Prompt user to turn on Bluetooth
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, 1);
+            }
+        }
     }
 
     private BluetoothSocket createBluetoothSocket(BluetoothDevice device) throws IOException {
@@ -143,7 +107,8 @@ public class MainActivity extends ActionBarActivity
         try {
             btSocket = createBluetoothSocket(device);
         } catch (IOException e1) {
-            exitWithErrorMessage("Fatal Error", "In onResume() and socket create failed: " + e1.getMessage() + ".");
+            exitWithErrorMessage(this, "Fatal Error", "In onResume() and socket create failed: "
+                    + e1.getMessage() + ".");
         }
 
         // Discovery is resource intensive, ensure it isn't happening.
@@ -155,10 +120,12 @@ public class MainActivity extends ActionBarActivity
             btSocket.connect();
             Log.d(TAG, "...Connection ok...");
         } catch (IOException e) {
+            Log.e(TAG, "Failed to connect to socket: " + e.getMessage());
             try {
                 btSocket.close();
             } catch (IOException e2) {
-                exitWithErrorMessage("Fatal Error", "In onResume() and unable to close socket during connection failure" + e2.getMessage() + ".");
+                exitWithErrorMessage(this, "Fatal Error", "In onResume() and unable to close " +
+                        "socket during connection failure" + e2.getMessage() + ".");
             }
         }
 
@@ -167,7 +134,8 @@ public class MainActivity extends ActionBarActivity
         try {
             arduinoStream = btSocket.getOutputStream();
         } catch (IOException e) {
-            exitWithErrorMessage("Fatal Error", "In onResume() and output stream creation failed:" + e.getMessage() + ".");
+            exitWithErrorMessage(this, "Fatal Error", "In onResume() and output stream creation " +
+                    "failed:" + e.getMessage() + ".");
         }
     }
 
@@ -188,50 +156,16 @@ public class MainActivity extends ActionBarActivity
         try {
             btSocket.close();
         } catch (IOException e2) {
-            exitWithErrorMessage("Fatal Error", "onPause() failed to close socket."
+            exitWithErrorMessage(this, "Fatal Error", "onPause() failed to close socket."
                     + e2.getMessage() + ".");
         }
     }
 
-    private void ensureBluetoothAvailable() {
-        // Check for Bluetooth support and then check to make sure it is turned on
-        // Emulator doesn't support Bluetooth and will return null
-        if(btAdapter==null) {
-            exitWithErrorMessage("Fatal Error", "Bluetooth not support");
-        } else {
-            if (btAdapter.isEnabled()) {
-                Log.d(TAG, "...Bluetooth ON...");
-            } else {
-                //Prompt user to turn on Bluetooth
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, 1);
-            }
-        }
-    }
-
-    private void sendDataToBeveryman(String message) {
-        if (arduinoStream == null) {
-            Toast.makeText(getBaseContext(), "Beveryman not connected.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        byte[] msgBuffer = message.getBytes();
-        Log.d(TAG, "...Send data: " + message + "...");
-
-        try {
-            arduinoStream.write(msgBuffer);
-        } catch (IOException e) {
-            String msg = "In onResume() and an exception occurred during write: " + e.getMessage();
-            msg = msg +  ".\n\nCheck that the SPP UUID: " + MY_UUID.toString() + " exists on " +
-                     "server.\n\n";
-            exitWithErrorMessage("Fatal Error", msg);
-        }
-    }
-
-    private void exitWithErrorMessage(String title, String message){
+    private static void exitWithErrorMessage(Activity activity, String title, String message){
         Log.e(TAG, title + " : " + message);
-        Toast.makeText(getBaseContext(), title + " - " + message, Toast.LENGTH_LONG).show();
-        finish();
+        Toast.makeText(activity.getBaseContext(), title + " - " + message,
+                Toast.LENGTH_LONG).show();
+        activity.finish();
     }
 
     @Override
@@ -294,22 +228,29 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == REQUEST_ENABLE_BT){
-            if(bluetoothAdapter.isEnabled()) {
-                //text.setText("Status: Enabled");
-            } else {
-                //text.setText("Status: Disabled");
-            }
-        }
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
-    @Override
-    protected void onDestroy() {
-        if (bReceiver != null) {
-            unregisterReceiver(bReceiver);
+    protected static void sendDataToBeveryman(Activity activity, String message) {
+        if (arduinoStream == null) {
+            Toast.makeText(activity.getBaseContext(), "Beveryman not connected.",
+                    Toast.LENGTH_SHORT).show();
+            return;
         }
-        super.onDestroy();
+
+        byte[] msgBuffer = message.getBytes();
+        Log.d(TAG, "...Send data: " + message + "...");
+
+        try {
+            arduinoStream.write(msgBuffer);
+        } catch (IOException e) {
+            String msg = "In sendDataToBeveryman() and an exception occurred during write: "
+                    + e.getMessage();
+            msg = msg +  ".\n\nCheck that the SPP UUID: " + MY_UUID.toString() + " exists on " +
+                    "server.\n\n";
+            exitWithErrorMessage(activity, "Fatal Error", msg);
+        }
     }
 
     /** A placeholder fragment containing a simple view. */
@@ -365,7 +306,11 @@ public class MainActivity extends ActionBarActivity
             Button pourButton = (Button) rootView.findViewById(R.id.pour_button);
             pourButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
+                    Log.d(TAG, "sending data");
+
                     DrinkMaker.makeDrink(section);
+
+                    sendDataToBeveryman(getActivity(), "0,1,2,5,0,0,0,6");
                 }
             });
         }
