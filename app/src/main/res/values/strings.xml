@@ -14,16 +14,83 @@
     <string name="ingredients">Ingredients:</string>
 
     <string name="title1">Whiskey sour</string>
-    <string name="description1">A whiskey sour is a drink. Yum.</string>
-    <string name="ingredients1">Whiskey, sour mix. Duh.</string>
+    <string name="description1">Contains both whiskey and sours mix, to the shock of all.</string>
+    <string name="ingredients1">Whiskey, sours</string>
 
     <string name="title2">Rum and coke</string>
-    <string name="description2">A rum and coke is a drink. Add a slice of lime and it\'s a cuba
-        libre.</string>
-    <string name="ingredients2">Rum, coke. You idiot.</string>
+    <string name="description2">Don't tell me you needed the ingredients list for this one.</string>
+    <string name="ingredients2">Rum, coke</string>
 
     <string name="title3">Long Island iced tea</string>
     <string name="description3">I guess people on Long Island are drunk a lot.</string>
-    <string name="ingredients3">Buncha alcohols in here.</string>
+    <string name="ingredients3">Most everything.</string>
+
+    <string name="title4">Border Crossing</string>
+    <string name="description4">A cuba libre, but with tequila.</string>
+    <string name="ingredients4">Tequila, coke, lemon, lime</string>
+
+    <string name="title5">Brass Monkey</string>
+    <string name="description5">Made with real monkey.</string>
+    <string name="ingredients5">Rum, vodka, orange juice</string>
+
+    <string name="title6">Cuba Libre</string>
+    <string name="description6">Like a rum and coke, but more cuban.</string>
+    <string name="ingredients6">Rum, coke, lime</string>
+
+    <string name="title7">Daiquiri</string>
+    <string name="description7">Serve with a curl of lemon rind and a hint of pretension. Serve over crushed ice.</string>
+    <string name="ingredients7">Rum, sugar, lime</string>
+
+    <string name="title8">El Dorado</string>
+    <string name="description8">Originally named after the "gold" of the honey, Beveryman just uses sugar.</string>
+    <string name="ingredients8">Tequila, lemon, sugar</string>
+
+    <string name="title9">Kamikaze</string>
+    <string name="description9">Intended to be served as a shot.</string>
+    <string name="ingredients9">Vodka, triple sec, lime</string>
+
+    <string name="title10">Lemon Drop</string>
+    <string name="description10">Ours is more of a "lemon-lime drop".</string>
+    <string name="ingredients10">Vodka, triple sec, lemon, lime, sugar</string>
+
+    <string name="title11">Screwdriver</string>
+    <string name="description11">Serve over ice, at brunch, while complaining about your ex-husband.</string>
+    <string name="ingredients11">Vodka, orange juice</string>
+
+    <string name="title12">Tiger Juice</string>
+    <string name="description12">Juiced from real tigers.</string>
+    <string name="ingredients12">Whiskey, orange juice, lemon</string>
+
+    <string name="title13">Viva Villa</string>
+    <string name="description13">You can tell it's a tequila drink from the name, I hope.</string>
+    <string name="ingredients13">Tequila, lemon, lime, sugar</string>
+
+    <string name="title14">Ambassador</string>
+    <string name="description14">Serve over ice.</string>
+    <string name="ingredients14">Tequila, orange juice, sugar</string>
+
+    <string name="title15">Bacardi Cocktail</string>
+    <string name="description15">May not actually contain Bacardi brand rum. Add grenadine.</string>
+    <string name="ingredients15">Rum, lime, sugar</string>
+
+    <string name="title16">Mai Tai</string>
+    <string name="description16">Add grenadine if desired. Garnish with an exotic looking fruit.</string>
+    <string name="ingredients16">Rum, triple sec, orange juice, sugar, lime</string>
+
+    <string name="title17">Margarita</string>
+    <string name="description17">Garnish with lime.</string>
+    <string name="ingredients17">Tequila, triple sec, lime.</string>
+
+    <string name="title18">New Yorker</string>
+    <string name="description18">Add grenadine if desired. Serve over crushed ice.</string>
+    <string name="ingredients18">Whiskey, lime, sugar</string>
+
+    <string name="title19">Tequila Sunrise</string>
+    <string name="description19">Add grenadine to the bottom of the glass first to get the sunrise effect.</string>
+    <string name="ingredients19">Tequila, orange juice</string>
+
+    <string name="title20">Jack and Coke</string>
+    <string name="description20">Possibly not Jack Daniels brand whiskey.</string>
+    <string name="ingredients20">Whiskey, coke</string>
 
 </resources>

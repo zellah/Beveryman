@@ -301,16 +301,98 @@ public class MainActivity extends ActionBarActivity
                     mDrinkDescr.setText(getString(R.string.description3));
                     mDrinkIngre.setText(getString(R.string.ingredients3));
                     break;
+                case 4:
+                    mDrinkTitle.setText(getString(R.string.title4));
+                    mDrinkDescr.setText(getString(R.string.description4));
+                    mDrinkIngre.setText(getString(R.string.ingredients4));
+                    break;
+                case 5:
+                    mDrinkTitle.setText(getString(R.string.title5));
+                    mDrinkDescr.setText(getString(R.string.description5));
+                    mDrinkIngre.setText(getString(R.string.ingredients5));
+                    break;
+                case 6:
+                    mDrinkTitle.setText(getString(R.string.title6));
+                    mDrinkDescr.setText(getString(R.string.description6));
+                    mDrinkIngre.setText(getString(R.string.ingredients6));
+                    break;
+                case 7:
+                    mDrinkTitle.setText(getString(R.string.title7));
+                    mDrinkDescr.setText(getString(R.string.description7));
+                    mDrinkIngre.setText(getString(R.string.ingredients7));
+                    break;
+                case 8:
+                    mDrinkTitle.setText(getString(R.string.title8));
+                    mDrinkDescr.setText(getString(R.string.description8));
+                    mDrinkIngre.setText(getString(R.string.ingredients8));
+                    break;
+                case 9:
+                    mDrinkTitle.setText(getString(R.string.title9));
+                    mDrinkDescr.setText(getString(R.string.description9));
+                    mDrinkIngre.setText(getString(R.string.ingredients9));
+                    break;
+                case 10:
+                    mDrinkTitle.setText(getString(R.string.title10));
+                    mDrinkDescr.setText(getString(R.string.description10));
+                    mDrinkIngre.setText(getString(R.string.ingredients10));
+                    break;
+                case 11:
+                    mDrinkTitle.setText(getString(R.string.title11));
+                    mDrinkDescr.setText(getString(R.string.description11));
+                    mDrinkIngre.setText(getString(R.string.ingredients11));
+                    break;
+                case 12:
+                    mDrinkTitle.setText(getString(R.string.title12));
+                    mDrinkDescr.setText(getString(R.string.description12));
+                    mDrinkIngre.setText(getString(R.string.ingredients12));
+                    break;
+                case 13:
+                    mDrinkTitle.setText(getString(R.string.title13));
+                    mDrinkDescr.setText(getString(R.string.description13));
+                    mDrinkIngre.setText(getString(R.string.ingredients13));
+                    break;
+                case 14:
+                    mDrinkTitle.setText(getString(R.string.title14));
+                    mDrinkDescr.setText(getString(R.string.description14));
+                    mDrinkIngre.setText(getString(R.string.ingredients14));
+                    break;
+                case 15:
+                    mDrinkTitle.setText(getString(R.string.title15));
+                    mDrinkDescr.setText(getString(R.string.description15));
+                    mDrinkIngre.setText(getString(R.string.ingredients15));
+                    break;
+                case 16:
+                    mDrinkTitle.setText(getString(R.string.title16));
+                    mDrinkDescr.setText(getString(R.string.description16));
+                    mDrinkIngre.setText(getString(R.string.ingredients16));
+                    break;
+                case 17:
+                    mDrinkTitle.setText(getString(R.string.title17));
+                    mDrinkDescr.setText(getString(R.string.description17));
+                    mDrinkIngre.setText(getString(R.string.ingredients17));
+                    break;
+                case 18:
+                    mDrinkTitle.setText(getString(R.string.title18));
+                    mDrinkDescr.setText(getString(R.string.description18));
+                    mDrinkIngre.setText(getString(R.string.ingredients18));
+                    break;
+                case 19:
+                    mDrinkTitle.setText(getString(R.string.title19));
+                    mDrinkDescr.setText(getString(R.string.description19));
+                    mDrinkIngre.setText(getString(R.string.ingredients19));
+                    break;
+                case 20:
+                    mDrinkTitle.setText(getString(R.string.title20));
+                    mDrinkDescr.setText(getString(R.string.description20));
+                    mDrinkIngre.setText(getString(R.string.ingredients20));
+                    break;
             }
 
             Button pourButton = (Button) rootView.findViewById(R.id.pour_button);
             pourButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Log.d(TAG, "sending data");
-
-                    DrinkMaker.makeDrink(section);
-
-                    sendDataToBeveryman(getActivity(), "0,1,2,5,0,0,0,6");
+                    Log.d(TAG, "sending data: " + DrinkLibrary.getDrinkInstructions(section));
+                    sendDataToBeveryman(getActivity(), DrinkLibrary.getDrinkInstructions(section));
                 }
             });
         }
