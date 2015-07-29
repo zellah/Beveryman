@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Build;
 import android.support.v7.app.ActionBarActivity;
@@ -19,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,7 +26,6 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
-import java.util.Set;
 import java.util.UUID;
 
 public class MainActivity extends ActionBarActivity
@@ -39,8 +36,6 @@ public class MainActivity extends ActionBarActivity
 
     /** Used to store the last screen title. For use in {@link #restoreActionBar()}. */
     private CharSequence mTitle;
-
-    private static final int REQUEST_ENABLE_BT = 1;
 
     private static final String TAG = "bluetooth1";
     private BluetoothAdapter btAdapter = null;
@@ -187,6 +182,57 @@ public class MainActivity extends ActionBarActivity
                 break;
             case 3:
                 mTitle = getString(R.string.title3);
+                break;
+            case 4:
+                mTitle = getString(R.string.title4);
+                break;
+            case 5:
+                mTitle = getString(R.string.title5);
+                break;
+            case 6:
+                mTitle = getString(R.string.title6);
+                break;
+            case 7:
+                mTitle = getString(R.string.title7);
+                break;
+            case 8:
+                mTitle = getString(R.string.title8);
+                break;
+            case 9:
+                mTitle = getString(R.string.title9);
+                break;
+            case 10:
+                mTitle = getString(R.string.title10);
+                break;
+            case 11:
+                mTitle = getString(R.string.title11);
+                break;
+            case 12:
+                mTitle = getString(R.string.title12);
+                break;
+            case 13:
+                mTitle = getString(R.string.title13);
+                break;
+            case 14:
+                mTitle = getString(R.string.title14);
+                break;
+            case 15:
+                mTitle = getString(R.string.title15);
+                break;
+            case 16:
+                mTitle = getString(R.string.title16);
+                break;
+            case 17:
+                mTitle = getString(R.string.title17);
+                break;
+            case 18:
+                mTitle = getString(R.string.title18);
+                break;
+            case 19:
+                mTitle = getString(R.string.title19);
+                break;
+            case 20:
+                mTitle = getString(R.string.title20);
                 break;
         }
     }

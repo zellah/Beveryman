@@ -14,11 +14,11 @@
     <string name="ingredients">Ingredients:</string>
 
     <string name="title1">Whiskey sour</string>
-    <string name="description1">Contains both whiskey and sours mix, to the shock of all.</string>
+    <string name="description1">Contains both whiskey and sours mix. Shocking.</string>
     <string name="ingredients1">Whiskey, sours</string>
 
     <string name="title2">Rum and coke</string>
-    <string name="description2">Don't tell me you needed the ingredients list for this one.</string>
+    <string name="description2">Don\'t tell me you needed the ingredients list for this one.</string>
     <string name="ingredients2">Rum, coke</string>
 
     <string name="title3">Long Island iced tea</string>
@@ -42,7 +42,7 @@
     <string name="ingredients7">Rum, sugar, lime</string>
 
     <string name="title8">El Dorado</string>
-    <string name="description8">Originally named after the "gold" of the honey, Beveryman just uses sugar.</string>
+    <string name="description8">Originally named after the gold color of the honey, Beveryman just uses sugar.</string>
     <string name="ingredients8">Tequila, lemon, sugar</string>
 
     <string name="title9">Kamikaze</string>
@@ -50,7 +50,7 @@
     <string name="ingredients9">Vodka, triple sec, lime</string>
 
     <string name="title10">Lemon Drop</string>
-    <string name="description10">Ours is more of a "lemon-lime drop".</string>
+    <string name="description10">Beveryman serves more of a lemon-lime drop.</string>
     <string name="ingredients10">Vodka, triple sec, lemon, lime, sugar</string>
 
     <string name="title11">Screwdriver</string>
@@ -62,11 +62,11 @@
     <string name="ingredients12">Whiskey, orange juice, lemon</string>
 
     <string name="title13">Viva Villa</string>
-    <string name="description13">You can tell it's a tequila drink from the name, I hope.</string>
+    <string name="description13">You can tell it\'s a tequila drink from the name, somehow.</string>
     <string name="ingredients13">Tequila, lemon, lime, sugar</string>
 
     <string name="title14">Ambassador</string>
-    <string name="description14">Serve over ice.</string>
+    <string name="description14">An immigration joke? In a tequila drink name? It can't be. Serve over ice.</string>
     <string name="ingredients14">Tequila, orange juice, sugar</string>
 
     <string name="title15">Bacardi Cocktail</string>

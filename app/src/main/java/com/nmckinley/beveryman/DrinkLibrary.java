@@ -57,7 +57,7 @@ public class DrinkLibrary {
         drinkOrder.put(20, Drink.JACK_AND_COKE);
     }
 
-    private class Amount {
+    private static class Amount {
 
         private Liquid drink;
         private int pourTime;
